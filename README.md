@@ -32,3 +32,8 @@ php artisan db:seed
 ```
  php artisan serve
 ```
+
+Запуск тестов
+```
+php artisan test
+```
