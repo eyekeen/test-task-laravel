@@ -21,7 +21,6 @@ Route::get('/', function () {
 
 Route::resource('products', ProductController::class);
 
-
 Route::resource('orders', OrderController::class);
 
 Route::put('orders/{order}/complete', [OrderController::class, 'complete'])->name('orders.complete');

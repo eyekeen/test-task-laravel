@@ -28,7 +28,8 @@ class OrderController extends Controller
      */
     public function create()
     {
-        $products = Product::all(); // Получаем все товары для выбора
+        $products = Product::all();
+
         return view('orders.create', compact('products'));
     }
 
@@ -44,7 +45,7 @@ class OrderController extends Controller
             'comment' => 'nullable|string',
         ]);
 
-        $order = new Order();
+        $order = new Order;
         $order->full_name = $validated['full_name'];
         $order->product_id = $validated['product_id'];
         $order->quantity = $validated['quantity'];
@@ -69,6 +70,7 @@ class OrderController extends Controller
     public function edit(Order $order)
     {
         $products = Product::all(); // Получаем все товары для выбора
+
         return view('orders.edit', compact('order', 'products'));
     }
 
@@ -82,12 +84,11 @@ class OrderController extends Controller
             'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:1',
             'comment' => 'nullable|string',
-            'status' => 'nullable|string|in:new,completed'
+            'status' => 'nullable|string|in:new,completed',
         ]);
 
-
         // Если чекбокс не установлен, устанавливаем статус "new"
-        if (!$request->has('status')) {
+        if (! $request->has('status')) {
             $validated['status'] = 'Новый';
         } else {
             $validated['status'] = 'Выполнен';
@@ -112,7 +113,6 @@ class OrderController extends Controller
 
         return redirect()->route('orders.index')->with('success', 'Заказ успешно удален.');
     }
-
 
     public function complete(Order $order)
     {

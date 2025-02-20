@@ -2,10 +2,8 @@
 
 namespace Tests\Feature;
 
-
-use Tests\TestCase;
 use App\Models\Product;
-
+use Tests\TestCase;
 
 class ProductTest extends TestCase
 {
@@ -42,7 +40,6 @@ class ProductTest extends TestCase
         $response->assertStatus(200);
     }
 
-    
     /**
      * Тест удаления продукта.
      *
@@ -52,8 +49,6 @@ class ProductTest extends TestCase
     {
         // Создаем товар
         $product = Product::factory()->create();
-
-        
 
         // Удаляем продукт
         $response = $this->delete("/products/{$product->id}");

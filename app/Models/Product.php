@@ -15,13 +15,11 @@ class Product extends Model
         'name',
         'category_id',
         'description',
-        'price'
+        'price',
     ];
 
     /**
      * Связь с категорией
-     *
-     * @return BelongsTo
      */
     public function category(): BelongsTo
     {
@@ -30,13 +28,11 @@ class Product extends Model
 
     /**
      * Связь с заказами
-     *
-     * @return BelongsToMany
      */
     public function orders(): BelongsToMany
     {
         return $this->belongsToMany(Order::class)
-                    ->withPivot('quantity') // Включаем поле quantity из промежуточной таблицы
-                    ->withTimestamps();    // Включаем timestamps из промежуточной таблицы
+            ->withPivot('quantity') // Включаем поле quantity из промежуточной таблицы
+            ->withTimestamps();    // Включаем timestamps из промежуточной таблицы
     }
 }
