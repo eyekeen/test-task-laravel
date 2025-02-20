@@ -13,7 +13,13 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::with('product')->paginate(10); // Получаем заказы с товарами и пагинацией
+        $orders = Order::with('product')->paginate(10);
+
+        // Добавляем итоговую стоимость для каждого заказа
+        $orders->each(function ($order) {
+            $order->total_price = $order->product ? $order->product->price * $order->quantity : 0;
+        });
+
         return view('orders.index', compact('orders'));
     }
 
@@ -76,12 +82,22 @@ class OrderController extends Controller
             'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:1',
             'comment' => 'nullable|string',
+            'status' => 'nullable|string|in:new,completed'
         ]);
+
+
+        // Если чекбокс не установлен, устанавливаем статус "new"
+        if (!$request->has('status')) {
+            $validated['status'] = 'Новый';
+        } else {
+            $validated['status'] = 'Выполнен';
+        }
 
         $order->full_name = $validated['full_name'];
         $order->product_id = $validated['product_id'];
         $order->quantity = $validated['quantity'];
         $order->comment = $validated['comment'] ?? null;
+        $order->status = $validated['status'];
         $order->save();
 
         return redirect()->route('orders.index')->with('success', 'Заказ успешно обновлен.');

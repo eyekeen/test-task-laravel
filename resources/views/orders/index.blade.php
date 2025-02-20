@@ -3,7 +3,6 @@
 @section('content')
 <div class="container">
     <h1>Список заказов</h1>
-    <a href="{{ route('orders.create') }}" class="btn btn-primary mb-3">Добавить заказ</a>
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
@@ -13,11 +12,10 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>ФИО покупателя</th>
-                <th>Товар</th>
-                <th>Количество</th>
-                <th>Статус</th>
                 <th>Дата создания</th>
+                <th>ФИО покупателя</th>
+                <th>Статус</th>
+                <th>Итоговая цена</th>
                 <th>Действия</th>
             </tr>
         </thead>
@@ -25,11 +23,16 @@
             @foreach($orders as $order)
                 <tr>
                     <td>{{ $order->id }}</td>
-                    <td>{{ $order->full_name }}</td>
-                    <td>{{ $order->product?->name ?? 'Товар удален' }}</td>
-                    <td>{{ $order->quantity }}</td>
-                    <td>{{ $order->status }}</td>
                     <td>{{ $order->created_at->format('d.m.Y H:i') }}</td>
+                    <td>{{ $order->full_name }}</td>
+                    <td>
+                        @if ($order->status === 'Выполнен')
+                            <span class="text-success fw-bold">Выполнен</span>
+                        @else
+                            <span class="text-primary">Новый</span>
+                        @endif
+                    </td>
+                    <td>{{ number_format($order->total_price ?? 0, 2, '.', ' ') }} ₽</td>
                     <td>
                         <a href="{{ route('orders.show', $order) }}" class="btn btn-info btn-sm">Просмотр</a>
                         <a href="{{ route('orders.edit', $order) }}" class="btn btn-warning btn-sm">Редактировать</a>

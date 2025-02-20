@@ -5,13 +5,13 @@
     <h1>Редактирование заказа</h1>
 
     @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
     @endif
 
     <form action="{{ route('orders.update', $order) }}" method="POST" class="mt-3">
@@ -28,9 +28,9 @@
             <select name="product_id" id="product_id" class="form-select" required>
                 <option value="">Выберите товар</option>
                 @foreach($products as $product)
-                <option value="{{ $product->id }}" {{ $order->product_id == $product->id ? 'selected' : '' }}>
-                    {{ $product->name }} ({{ number_format($product->price, 2, '.', ' ') }} ₽)
-                </option>
+                    <option value="{{ $product->id }}" {{ $order->product_id == $product->id ? 'selected' : '' }}>
+                        {{ $product->name }} ({{ number_format($product->price, 2, '.', ' ') }} ₽)
+                    </option>
                 @endforeach
             </select>
         </div>
@@ -44,24 +44,25 @@
             <label for="comment" class="form-label">Комментарий</label>
             <textarea name="comment" id="comment" class="form-control">{{ $order->comment }}</textarea>
         </div>
+
+        <!-- Статус заказа -->
+        <div class="mb-3">
+            <label class="form-label">Статус заказа</label>
+            @if ($order->status === 'Выполнен')
+                <!-- Если заказ выполнен, показываем только текст -->
+                <p class="form-control-plaintext text-success fw-bold">Выполнен</p>
+            @else
+                <!-- Если заказ новый, показываем чекбокс -->
+                <div class="form-check">
+                    <input type="hidden" name="status" value="new"> <!-- По умолчанию статус "new" -->
+                    <input type="checkbox" name="status" id="status" value="completed" class="form-check-input" {{ old('status') === 'completed' ? 'checked' : '' }}>
+                    <label for="status" class="form-check-label">Выполнен</label>
+                </div>
+            @endif
+        </div>
+
         <button type="submit" class="btn btn-primary">Обновить заказ</button>
         <a href="{{ route('orders.index') }}" class="btn btn-secondary">Отмена</a>
     </form>
-
-    <!-- Статус заказа -->
-    <div class="mb-3">
-        <label class="form-label">Статус заказа</label>
-        @if ($order->status === 'Выполнен')
-        <!-- Если заказ выполнен, показываем только текст -->
-        <p class="form-control-plaintext text-success fw-bold">Выполнен</p>
-        @else
-        <!-- Если заказ новый, показываем кнопку для изменения статуса -->
-        <form action="{{ route('orders.complete', $order) }}" method="POST" style="display:inline;">
-            @csrf
-            @method('PUT')
-            <button type="submit" class="btn btn-primary">Пометить как выполнен</button>
-        </form>
-        @endif
-    </div>
 </div>
 @endsection
