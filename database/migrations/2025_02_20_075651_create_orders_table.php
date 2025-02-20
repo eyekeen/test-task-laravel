@@ -16,6 +16,10 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->string('full_name');
+
+            $table->unsignedBigInteger("product_id");
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->integer('quantity')->default(1);
             $table->enum('status', ['Новый', 'Выполнен'])->default('new');
             $table->text('comment')->nullable();
             $table->timestamps();

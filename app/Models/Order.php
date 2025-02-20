@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Order extends Model
@@ -13,18 +14,17 @@ class Order extends Model
     protected $fillable = [
         'full_name',
         'status',
-        'comment'
+        'quantity',
+        'comment',
     ];
 
     /**
-     * Связь с товарами
+     * Связь с товаром
      *
-     * @return BelongsToMany
+     * @return BelongsTo
      */
-    public function products(): BelongsToMany
+    public function product(): BelongsTo
     {
-        return $this->belongsToMany(Product::class)
-                    ->withPivot('quantity') // Включаем поле quantity из промежуточной таблицы
-                    ->withTimestamps();    // Включаем timestamps из промежуточной таблицы
+        return $this->belongsTo(Product::class);
     }
 }
